@@ -1,0 +1,322 @@
+:root {
+            --primary: #0f172a;
+            --primary-light: #1e293b;
+            --accent: #3b82f6;
+            --accent-hover: #2563eb;
+            --bg: #f8fafc;
+            --card-bg: #ffffff;
+            --text: #334155;
+            --text-light: #64748b;
+            --success: #10b981;
+            --error: #ef4444;
+            --warning: #f59e0b;
+            --info: #06b6d4;
+            --border: #e2e8f0;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+            padding: 20px;
+        }
+
+        header {
+            background: linear-gradient(135deg, var(--primary), var(--primary-light));
+            color: white;
+            padding: 30px;
+            border-radius: 12px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+            text-align: center;
+        }
+
+        header h1 {
+            font-size: 24px;
+            margin-bottom: 10px;
+        }
+
+        header p {
+            color: #94a3b8;
+            font-size: 14px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .module-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 24px;
+            margin-bottom: 25px;
+            box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1);
+        }
+
+        .module-locked {
+            opacity: 0.6;
+            pointer-events: none;
+            position: relative;
+        }
+
+        .module-locked::after {
+            content: "🔒 MÓDULO BLOQUEADO";
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(0, 0, 0, 0.85);
+            color: white;
+            padding: 15px 25px;
+            border-radius: 8px;
+            font-weight: bold;
+            font-size: 14px;
+            z-index: 10;
+        }
+
+        .password-prompt {
+            background: var(--card-bg);
+            border: 2px solid var(--accent);
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .password-prompt input {
+            padding: 10px 15px;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            font-size: 14px;
+            flex: 1;
+            min-width: 200px;
+        }
+
+        .password-prompt button {
+            background: var(--accent);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: background 0.2s;
+        }
+
+        .password-prompt button:hover {
+            background: var(--accent-hover);
+        }
+
+        .module-title {
+            font-size: 18px;
+            color: var(--primary);
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid var(--accent);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .question-block {
+            margin-bottom: 30px;
+            padding: 15px;
+            border-radius: 8px;
+            background-color: #fafafa;
+            border-left: 4px solid var(--text-light);
+        }
+
+        .question-text {
+            font-size: 15px;
+            font-weight: 600;
+            color: var(--primary);
+            margin-bottom: 15px;
+        }
+
+        .visual-box {
+            background: #1e293b;
+            color: #f8fafc;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            text-align: center;
+            font-size: 13px;
+        }
+
+        .cia-triangle {
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            max-width: 400px;
+            margin: auto;
+        }
+
+        .node {
+            background: #334155;
+            padding: 8px 12px;
+            border: 1px solid #475569;
+            border-radius: 6px;
+        }
+
+        .active-error {
+            background: var(--error) !important;
+            border-color: #b91c1c !important;
+            font-weight: bold;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { opacity: 1; }
+            50% { opacity: 0.6; }
+            100% { opacity: 1; }
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-weight: bold;
+            font-size: 11px;
+            text-transform: uppercase;
+        }
+        .badge.error { background-color: var(--error); color: white; }
+        .badge.warning { background-color: var(--warning); color: black; }
+        .badge.success { background-color: var(--success); color: white; }
+        .badge.info { background-color: var(--accent); color: white; }
+
+        .options-list {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .option-btn {
+            background: #ffffff;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            padding: 12px 15px;
+            text-align: left;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.2s ease;
+            width: 100%;
+        }
+
+        .option-btn:hover {
+            background-color: #f1f5f9;
+            border-color: var(--text-light);
+        }
+
+        .option-btn.correct-ans {
+            background-color: #d1fae5 !important;
+            border-color: var(--success) !important;
+            color: #065f46 !important;
+            font-weight: bold;
+        }
+
+        .option-btn.wrong-ans {
+            background-color: #fee2e2 !important;
+            border-color: var(--error) !important;
+            color: #991b1b !important;
+        }
+
+        .feedback-box {
+            margin-top: 12px;
+            padding: 12px;
+            border-radius: 6px;
+            font-size: 13px;
+            display: none;
+        }
+
+        .feedback-box.show {
+            display: block;
+        }
+
+        .feedback-box.correct {
+            background-color: #ecfdf5;
+            border-left: 4px solid var(--success);
+            color: #065f46;
+        }
+
+        .feedback-box.wrong {
+            background-color: #fef2f2;
+            border-left: 4px solid var(--error);
+            color: #991b1b;
+        }
+
+        .dashboard {
+            background: #ffffff;
+            border: 2px solid var(--accent);
+            border-radius: 12px;
+            padding: 20px;
+            margin-top: 30px;
+            text-align: center;
+        }
+
+        .score-big {
+            font-size: 36px;
+            font-weight: bold;
+            color: var(--accent);
+            margin: 10px 0;
+        }
+
+        .btn-reset {
+            background: var(--accent);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            font-size: 14px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: bold;
+            margin-top: 15px;
+        }
+
+        .btn-reset:hover {
+            background: var(--accent-hover);
+        }
+
+        .module-badge {
+            background-color: var(--primary-light);
+            color: white;
+            font-size: 12px;
+            padding: 3px 8px;
+            border-radius: 20px;
+        }
+
+        .password-hint {
+            font-size: 12px;
+            color: var(--text-light);
+            margin-top: 5px;
+            width: 100%;
+            text-align: center;
+        }
+
+        .unlock-all-btn {
+            background: var(--success);
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 12px;
+            font-weight: bold;
+            margin-left: 10px;
+        }
+
+        .unlock-all-btn:hover {
+            background: #059669;
+        }
