@@ -1,34 +1,1368 @@
 <!DOCTYPE html>
+
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cuestionario Interactivo y Visual - Curso de Ciberseguridad 2026</title>
-    <link rel="stylesheet" href="style.css">
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>CyberDefense Challenge 2026 - CTF Interactivo</title>
+<link href="style.css" rel="stylesheet"/>
 </head>
 <body>
-
-<div class="container">
-    <header>
-        <h1>Cuestionario Interactivo de Ciberseguridad</h1>
-        <p>Recurso Didáctico para el Aula - 5 Preguntas por Módulo basados en el Temario Oficial (ITSS)</p>
-        <div style="margin-top: 15px;">
-            <button class="unlock-all-btn" onclick="unlockAllModules()">🔓 Desbloquear Todos (Profesor)</button>
-        </div>
-    </header>
-
-    <div id="quiz-container"></div>
-
-    <div class="dashboard">
-        <h2>Panel de Progreso y Evaluación General</h2>
-        <p>Responde a las preguntas de arriba para ver tus resultados consolidados en tiempo real.</p>
-        <div class="score-big"><span id="correct-count">0</span> / 35</div>
-        <p id="evaluation-text">¡Comienza el test interactivo seleccionando tus opciones!</p>
-        <button class="btn-reset" onclick="resetQuiz()">Reiniciar Todo el Cuestionario</button>
-    </div>
+<header class="header">
+<h1>🛡️ CyberDefense Challenge 2026</h1>
+<p>CTF Interactivo - Curso Básico de Ciberseguridad (ITSS)</p>
+<div class="stats">
+<div class="stat-card">
+<h3 id="total-exercises">75</h3>
+<p>Ejercicios</p>
 </div>
-
+<div class="stat-card">
+<h3 id="total-points">1855</h3>
+<p>Puntos totales</p>
+</div>
+<div class="stat-card">
+<h3 id="completed-count">0</h3>
+<p>Completados</p>
+</div>
+<div class="stat-card">
+<h3 id="completed-points">0</h3>
+<p>Tus puntos</p>
+</div>
+</div>
+</header>
+<nav class="nav">
+<div class="nav-container">
+<button class="nav-btn active" onclick="showModule('all')">🏠 Todos</button>
+<button class="nav-btn" onclick="showModule('module-1')"><span class="module-title-icon">📚</span> Módulo 1</button>
+<button class="nav-btn" onclick="showModule('module-2')"><span class="module-title-icon">🌐</span> Módulo 2</button>
+<button class="nav-btn" onclick="showModule('module-3')"><span class="module-title-icon">🦠</span> Módulo 3</button>
+<button class="nav-btn" onclick="showModule('module-4')"><span class="module-title-icon">🔐</span> Módulo 4</button>
+<button class="nav-btn" onclick="showModule('module-5')"><span class="module-title-icon">🔒</span> Módulo 5</button>
+<button class="nav-btn" onclick="showModule('module-6')"><span class="module-title-icon">🛡️</span> Módulo 6</button>
+<button class="nav-btn" onclick="showModule('module-7')"><span class="module-title-icon">📜</span> Módulo 7</button>
+</div>
+</nav>
+<main class="main">
+<div class="info-section">
+<h3>ℹ️ Bienvenido al CTF Interactivo</h3>
+<ul>
+<li><strong>75 ejercicios prácticos</strong> basados en el Curso Básico de Ciberseguridad de la ITSS</li>
+<li><strong>7 módulos</strong> que cubren todos los temas del curso</li>
+<li>Usa los botones de navegación para cambiar entre módulos</li>
+<li>Filtra por <strong>dificultad</strong> (🟢 Fácil / 🟡 Intermedio / 🔴 Avanzado)</li>
+<li>Usa la <strong>barra de búsqueda</strong> para encontrar ejercicios específicos</li>
+<li><strong>Escribe tu respuesta</strong> y haz clic en "✅ Verificar" para comprobarla</li>
+<li><strong>Marca los ejercicios como completados</strong> para llevar tu progreso</li>
+<li>Haz clic en <strong>"💡 Mostrar pista"</strong> cuando necesites ayuda</li>
+<li>⚠️ <strong>Todos los ejercicios prácticos deben realizarse en entornos controlados y legales</strong></li>
+<li>Tu progreso se guarda automáticamente en el navegador</li>
+</ul>
+</div>
+<div class="filter-section">
+<h3>🔍 Filtrar ejercicios</h3>
+<div class="filter-options">
+<button class="filter-btn active" onclick="filterByDifficulty('all')">Todos</button>
+<button class="filter-btn" onclick="filterByDifficulty('easy')">🟢 Fácil (10-15 pts)</button>
+<button class="filter-btn" onclick="filterByDifficulty('medium')">🟡 Intermedio (20-25 pts)</button>
+<button class="filter-btn" onclick="filterByDifficulty('hard')">🔴 Avanzado (30 pts)</button>
+</div>
+<input class="search-box" id="search-box" onkeyup="searchExercises()" placeholder="🔎 Buscar ejercicios..." type="text"/>
+</div>
+<div class="total-progress">
+<h3>📊 Tu progreso</h3>
+<div class="progress-summary">
+<div class="progress-item">
+<div class="progress-item-value" id="progress-easy">0</div>
+<div class="progress-item-label">Fáciles</div>
+</div>
+<div class="progress-item">
+<div class="progress-item-value" id="progress-medium">0</div>
+<div class="progress-item-label">Intermedios</div>
+</div>
+<div class="progress-item">
+<div class="progress-item-value" id="progress-hard">0</div>
+<div class="progress-item-label">Avanzados</div>
+</div>
+<div class="progress-item">
+<div class="progress-item-value" id="progress-percentage">0%</div>
+<div class="progress-item-label">Completado</div>
+</div>
+</div>
+<div class="progress-bar">
+<div class="progress-fill" id="progress-fill" style="width: 0%"></div>
+</div>
+</div>
+<!-- MÓDULO 1 -->
+<div class="module" id="module-1">
+<div class="module-header">
+<h2><span class="module-title-icon">📚</span> Módulo 1: Introducción a la Ciberseguridad</h2>
+<div class="module-stats">
+<span>✅ 8 Fáciles</span>
+<span>⚠️ 7 Intermedios</span>
+<span>🚨 5 Avanzados</span>
+</div>
+</div>
+<div class="exercise" data-difficulty="easy" data-module="1" data-points="10">
+<div class="exercise-header">
+<div><span class="difficulty-badge difficulty-easy">Fácil</span><span class="exercise-title">CTF-1-01: Definición de Ciberseguridad</span></div>
+<span class="exercise-points">10 pts</span>
+</div>
+<div class="exercise-description">
+<p>Escribe una definición propia de ciberseguridad en <strong>máximo 50 palabras</strong> que incluya: protección, sistemas, redes, datos, ataques digitales.</p>
+</div>
+<div class="exercise-actions">
+<textarea class="answer-box" placeholder="Escribe tu respuesta..." rows="3"></textarea>
+<div class="action-buttons">
+<button class="btn btn-verify" onclick="checkAnswer(this)">✅ Verificar</button>
+<button class="btn btn-warning" onclick="toggleHint(this)">💡 Pista</button>
+<label class="complete-checkbox"><input onchange="updateProgress(this)" type="checkbox"/> Completado</label>
+</div>
+<div class="answer-feedback"></div>
+</div>
+<div class="hint-content">
+<h4>💡 Pista:</h4>
+<ul>
+<li>Piensa en qué protege la ciberseguridad y contra qué</li>
+<li>Incluye todos los términos solicitados: protección, sistemas, redes, datos, ataques digitales</li>
+<li>Ejemplo de estructura: "La ciberseguridad es el conjunto de medidas para proteger... contra..."</li>
+</ul>
+</div>
+</div>
+<div class="exercise" data-difficulty="easy" data-module="1" data-points="10">
+<div class="exercise-header">
+<div><span class="difficulty-badge difficulty-easy">Fácil</span><span class="exercise-title">CTF-1-02: Tríada CIA</span></div>
+<span class="exercise-points">10 pts</span>
+</div>
+<div class="exercise-description">
+<p>Escenario: <code>"Un empleado envía un correo con información confidencial a un destinatario no autorizado"</code>.</p>
+<p>¿Qué principio de la tríada CIA se está violando?</p>
+</div>
+<div class="exercise-actions">
+<textarea class="answer-box" placeholder="Escribe tu respuesta..." rows="2"></textarea>
+<div class="action-buttons">
+<button class="btn btn-verify" onclick="checkAnswer(this)">✅ Verificar</button>
+<button class="btn btn-warning" onclick="toggleHint(this)">💡 Pista</button>
+<label class="complete-checkbox"><input onchange="updateProgress(this)" type="checkbox"/> Completado</label>
+</div>
+<div class="answer-feedback"></div>
+</div>
+<div class="hint-content">
+<h4>💡 Pista:</h4>
+<ul>
+<li>El escenario describe información que llega a alguien no autorizado</li>
+<li>¿Qué principio se viola cuando la información no está protegida contra accesos no autorizados?</li>
+</ul>
+</div>
+</div>
+<div class="exercise" data-difficulty="easy" data-module="1" data-points="10">
+<div class="exercise-header">
+<div><span class="difficulty-badge difficulty-easy">Fácil</span><span class="exercise-title">CTF-1-03: Clasificación de Atacantes</span></div>
+<span class="exercise-points">10 pts</span>
+</div>
+<div class="exercise-description">
+<p>Clasifica estos perfiles:</p>
+<ol>
+<li>Persona que usa herramientas automáticas para atacar sin entender cómo funcionan</li>
+<li>Empleado que filtra información de la empresa por venganza</li>
+<li>Experto que reporta vulnerabilidades a cambio de recompensa económica</li>
+<li>Gobierno que realiza espionaje cibernético a otros países</li>
+</ol>
+<p><em>Separa con comas tu respuesta</em></p>
+</div>
+<div class="exercise-actions">
+<textarea class="answer-box" placeholder="Escribe la clasificación..." rows="2"></textarea>
+<div class="action-buttons">
+<button class="btn btn-verify" onclick="checkAnswer(this)">✅ Verificar</button>
+<button class="btn btn-warning" onclick="toggleHint(this)">💡 Pista</button>
+<label class="complete-checkbox"><input onchange="updateProgress(this)" type="checkbox"/> Completado</label>
+</div>
+<div class="answer-feedback"></div>
+</div>
+<div class="hint-content">
+<h4>💡 Pista:</h4>
+<ul>
+<li>El primero usa herramientas sin entenderlas: ¿qué término describe a atacantes novatos?</li>
+<li>El segundo trabaja dentro de la organización: ¿qué término describe a alguien con acceso interno?</li>
+<li>El tercero recibe recompensa por encontrar vulnerabilidades: ¿qué tipo de hacker es este?</li>
+<li>El cuarto es un actor estatal: ¿qué entidad realiza espionaje entre países?</li>
+</ul>
+</div>
+</div>
+<div class="exercise" data-difficulty="easy" data-module="1" data-points="10">
+<div class="exercise-header">
+<div><span class="difficulty-badge difficulty-easy">Fácil</span><span class="exercise-title">CTF-1-04: Componentes de Superficie de Ataque</span></div>
+<span class="exercise-points">10 pts</span>
+</div>
+<div class="exercise-description">
+<p>Nombra <strong>5 componentes</strong> de la superficie de ataque de un sistema.</p>
+<p><em>Opciones: Redes, Servidores, Aplicaciones, Usuarios, Dispositivos IoT, Nube, Bases de datos</em></p>
+</div>
+<div class="exercise-actions">
+<textarea class="answer-box" placeholder="Escribe 5 componentes..." rows="2"></textarea>
+<div class="action-buttons">
+<button class="btn btn-verify" onclick="checkAnswer(this)">✅ Verificar</button>
+<button class="btn btn-warning" onclick="toggleHint(this)">💡 Pista</button>
+<label class="complete-checkbox"><input onchange="updateProgress(this)" type="checkbox"/> Completado</label>
+</div>
+<div class="answer-feedback"></div>
+</div>
+<div class="hint-content">
+<h4>💡 Pista:</h4>
+<ul>
+<li>Piensa en todos los elementos que pueden ser atacados en una organización</li>
+<li>Incluye tanto elementos físicos (hardware) como lógicos (software)</li>
+<li>Considera elementos de red, almacenamiento, personas y dispositivos</li>
+</ul>
+</div>
+</div>
+<div class="exercise" data-difficulty="easy" data-module="1" data-points="10">
+<div class="exercise-header">
+<div><span class="difficulty-badge difficulty-easy">Fácil</span><span class="exercise-title">CTF-1-05: Tipos de Amenazas</span></div>
+<span class="exercise-points">10 pts</span>
+</div>
+<div class="exercise-description">
+<p>Nombra <strong>5 tipos de amenazas</strong> a la ciberseguridad.</p>
+</div>
+<div class="exercise-actions">
+<textarea class="answer-box" placeholder="Escribe 5 tipos de amenazas..." rows="2"></textarea>
+<div class="action-buttons">
+<button class="btn btn-verify" onclick="checkAnswer(this)">✅ Verificar</button>
+<button class="btn btn-warning" onclick="toggleHint(this)">💡 Pista</button>
+<label class="complete-checkbox"><input onchange="updateProgress(this)" type="checkbox"/> Completado</label>
+</div>
+<div class="answer-feedback"></div>
+</div>
+<div class="hint-content">
+<h4>💡 Pista:</h4>
+<ul>
+<li>Piensa en: software malicioso, personas con malas intenciones, errores humanos, desastres naturales...</li>
+<li>Incluye amenazas internas (dentro de la organización) y externas</li>
+</ul>
+</div>
+</div>
+<div class="exercise" data-difficulty="easy" data-module="1" data-points="15">
+<div class="exercise-header">
+<div><span class="difficulty-badge difficulty-easy">Fácil</span><span class="exercise-title">CTF-1-06: Casos Reales</span></div>
+<span class="exercise-points">15 pts</span>
+</div>
+<div class="exercise-description">
+<p>Nombra <strong>3 casos reales famosos de ciberataques</strong> ocurridos en los últimos 10 años.</p>
+</div>
+<div class="exercise-actions">
+<textarea class="answer-box" placeholder="Ej: WannaCry, NotPetya..." rows="2"></textarea>
+<div class="action-buttons">
+<button class="btn btn-verify" onclick="checkAnswer(this)">✅ Verificar</button>
+<button class="btn btn-warning" onclick="toggleHint(this)">💡 Pista</button>
+<label class="complete-checkbox"><input onchange="updateProgress(this)" type="checkbox"/> Completado</label>
+</div>
+<div class="answer-feedback"></div>
+</div>
+<div class="hint-content">
+<h4>💡 Pista:</h4>
+<ul>
+<li>Uno afectó a hospitales en el Reino Unido en 2017 y usaba ransomware</li>
+<li>Otro afectó a una empresa de petróleo en 2021 y paralizó sus operaciones</li>
+<li>Un tercero afectó a una cadena de suministro de software en 2020</li>
+</ul>
+</div>
+</div>
+<div class="exercise" data-difficulty="easy" data-module="1" data-points="10">
+<div class="exercise-header">
+<div><span class="difficulty-badge difficulty-easy">Fácil</span><span class="exercise-title">CTF-1-07: Buenas Prácticas</span></div>
+<span class="exercise-points">10 pts</span>
+</div>
+<div class="exercise-description">
+<p>Nombra <strong>5 buenas prácticas</strong> básicas de ciberseguridad para usuarios.</p>
+</div>
+<div class="exercise-actions">
+<textarea class="answer-box" placeholder="Escribe 5 buenas prácticas..." rows="3"></textarea>
+<div class="action-buttons">
+<button class="btn btn-verify" onclick="checkAnswer(this)">✅ Verificar</button>
+<button class="btn btn-warning" onclick="toggleHint(this)">💡 Pista</button>
+<label class="complete-checkbox"><input onchange="updateProgress(this)" type="checkbox"/> Completado</label>
+</div>
+<div class="answer-feedback"></div>
+</div>
+<div class="hint-content">
+<h4>💡 Pista:</h4>
+<ul>
+<li>Piensa en: contraseñas seguras, actualizaciones de software, precaución con correos electrónicos...</li>
+<li>Incluye prácticas para proteger dispositivos y datos personales</li>
+</ul>
+</div>
+</div>
+<div class="exercise" data-difficulty="easy" data-module="1" data-points="10">
+<div class="exercise-header">
+<div><span class="difficulty-badge difficulty-easy">Fácil</span><span class="exercise-title">CTF-1-08: Objetivos Adicionales</span></div>
+<span class="exercise-points">10 pts</span>
+</div>
+<div class="exercise-description">
+<p>Además de la tríada CIA, nombra <strong>3 objetivos adicionales</strong> de la ciberseguridad.</p>
+</div>
+<div class="exercise-actions">
+<textarea class="answer-box" placeholder="Escribe 3 objetivos..." rows="2"></textarea>
+<div class="action-buttons">
+<button class="btn btn-verify" onclick="checkAnswer(this)">✅ Verificar</button>
+<button class="btn btn-warning" onclick="toggleHint(this)">💡 Pista</button>
+<label class="complete-checkbox"><input onchange="updateProgress(this)" type="checkbox"/> Completado</label>
+</div>
+<div class="answer-feedback"></div>
+</div>
+<div class="hint-content">
+<h4>💡 Pista:</h4>
+<ul>
+<li>Piensa en conceptos como: autenticidad (verificar la identidad), no repudio (no poder negar una acción)...</li>
+<li>También considera aspectos como la auditoría y el cumplimiento normativo</li>
+</ul>
+</div>
+</div>
+<div class="exercise" data-difficulty="medium" data-module="1" data-points="20">
+<div class="exercise-header">
+<div><span class="difficulty-badge difficulty-medium">Intermedio</span><span class="exercise-title">CTF-1-09: Mapa de Superficie de Ataque</span></div>
+<span class="exercise-points">20 pts</span>
+</div>
+<div class="exercise-description">
+<p>Dibuja un diagrama de la superficie de ataque de "SeguraTech" con al menos 8 componentes y medidas de mitigación.</p>
+<p><em>Escribe "diagrama completado" cuando hayas terminado</em></p>
+</div>
+<div class="exercise-actions">
+<textarea class="answer-box" placeholder="Escribe 'diagrama completado'..." rows="2"></textarea>
+<div class="action-buttons">
+<button class="btn btn-verify" onclick="checkAnswer(this)">✅ Verificar</button>
+<button class="btn btn-warning" onclick="toggleHint(this)">💡 Pista</button>
+<label class="complete-checkbox"><input onchange="updateProgress(this)" type="checkbox"/> Completado</label>
+</div>
+<div class="answer-feedback"></div>
+</div>
+<div class="hint-content">
+<h4>💡 Pista:</h4>
+<ul>
+<li>Componentes a incluir: servidores web, bases de datos, estaciones de trabajo, routers, firewalls, dispositivos IoT...</li>
+<li>Medidas de mitigación: parches de seguridad, segmentación de red, autenticación multifactor, copias de seguridad...</li>
+<li>Herramientas recomendadas: <a href="https://app.diagrams.net/" target="_blank">draw.io</a> o Lucidchart</li>
+</ul>
+</div>
+</div>
+<div class="exercise" data-difficulty="medium" data-module="1" data-points="20">
+<div class="exercise-header">
+<div><span class="difficulty-badge difficulty-medium">Intermedio</span><span class="exercise-title">CTF-1-10: Análisis de Riesgos</span></div>
+<span class="exercise-points">20 pts</span>
+</div>
+<div class="exercise-description">
+<p>Realiza un análisis de riesgos para un sistema de banca en línea. Identifica:</p>
+<ol>
+<li>3 activos críticos</li>
+<li>3 amenazas potenciales</li>
+<li>3 vulnerabilidades posibles</li>
+</ol>
+</div>
+<div class="exercise-actions">
+<textarea class="answer-box" placeholder="1. Activos: ..." rows="4"></textarea>
+<div class="action-buttons">
+<button class="btn btn-verify" onclick="checkAnswer(this)">✅ Verificar</button>
+<button class="btn btn-warning" onclick="toggleHint(this)">💡 Pista</button>
+<label class="complete-checkbox"><input onchange="updateProgress(this)" type="checkbox"/> Completado</label>
+</div>
+<div class="answer-feedback"></div>
+</div>
+<div class="hint-content">
+<h4>💡 Pista:</h4>
+<ul>
+<li><strong>Activos críticos:</strong> ¿Qué información o sistemas son más valiosos para un banco? (ej: bases de datos de clientes, sistemas de transacciones)</li>
+<li><strong>Amenazas:</strong> ¿Quién podría querer atacar este sistema? (ej: cibercriminales, hacktivistas, competencia)</li>
+<li><strong>Vulnerabilidades:</strong> ¿Qué debilidades podrían explotarse? (ej: software desactualizado, configuraciones incorrectas)</li>
+</ul>
+</div>
+</div>
+<div class="exercise" data-difficulty="medium" data-module="1" data-points="20">
+<div class="exercise-header">
+<div><span class="difficulty-badge difficulty-medium">Intermedio</span><span class="exercise-title">CTF-1-11: Políticas de Seguridad</span></div>
+<span class="exercise-points">20 pts</span>
+</div>
+<div class="exercise-description">
+<p>Crea una política de seguridad para el uso de dispositivos USB. Incluye:</p>
+<ol>
+<li>Objetivo de la política</li>
+<li>3 reglas específicas</li>
+<li>Consecuencias por incumplimiento</li>
+</ol>
+</div>
+<div class="exercise-actions">
+<textarea class="answer-box" placeholder="Escribe la política..." rows="4"></textarea>
+<div class="action-buttons">
+<button class="btn btn-verify" onclick="checkAnswer(this)">✅ Verificar</button>
+<button class="btn btn-warning" onclick="toggleHint(this)">💡 Pista</button>
+<label class="complete-checkbox"><input onchange="updateProgress(this)" type="checkbox"/> Completado</label>
+</div>
+<div class="answer-feedback"></div>
+</div>
+<div class="hint-content">
+<h4>💡 Pista:</h4>
+<ul>
+<li><strong>Objetivo:</strong> ¿Por qué es importante controlar el uso de dispositivos USB? (ej: prevenir malware, pérdida de datos)</li>
+<li><strong>Reglas:</strong> ¿Qué restricciones son razonables? (ej: prohibir USB personales, escanear dispositivos antes de usar)</li>
+<li><strong>Consecuencias:</strong> ¿Qué pasa si alguien no cumple? (ej: acciones disciplinarias, revocación de acceso)</li>
+</ul>
+</div>
+</div>
+<div class="exercise" data-difficulty="medium" data-module="1" data-points="25">
+<div class="exercise-header">
+<div><span class="difficulty-badge difficulty-medium">Intermedio</span><span class="exercise-title">CTF-1-12: Concienciación</span></div>
+<span class="exercise-points">25 pts</span>
+</div>
+<div class="exercise-description">
+<p>Diseña un programa de concienciación en ciberseguridad para empleados. Incluye:</p>
+<ol>
+<li>3 temas a tratar</li>
+<li>2 métodos de formación</li>
+<li>1 forma de medir efectividad</li>
+</ol>
+</div>
+<div class="exercise-actions">
+<textarea class="answer-box" placeholder="Escribe el programa..." rows="4"></textarea>
+<div class="action-buttons">
+<button class="btn btn-verify" onclick="checkAnswer(this)">✅ Verificar</button>
+<button class="btn btn-warning" onclick="toggleHint(this)">💡 Pista</button>
+<label class="complete-checkbox"><input onchange="updateProgress(this)" type="checkbox"/> Completado</label>
+</div>
+<div class="answer-feedback"></div>
+</div>
+<div class="hint-content">
+<h4>💡 Pista:</h4>
+<ul>
+<li><strong>Temas:</strong> phishing y ingeniería social, creación de contraseñas seguras, manejo seguro de información...</li>
+<li><strong>Métodos:</strong> talleres prácticos, simulaciones de phishing, videos educativos...</li>
+<li><strong>Medición:</strong> pruebas de phishing simuladas, encuestas de conocimiento, métricas de incidentes...</li>
+</ul>
+</div>
+</div>
+<div class="exercise" data-difficulty="medium" data-module="1" data-points="20">
+<div class="exercise-header">
+<div><span class="difficulty-badge difficulty-medium">Intermedio</span><span class="exercise-title">CTF-1-13: Marco NIST</span></div>
+<span class="exercise-points">20 pts</span>
+</div>
+<div class="exercise-description">
+<p>Explica brevemente las <strong>5 funciones del marco de ciberseguridad del NIST</strong>.</p>
+</div>
+<div class="exercise-actions">
+<textarea class="answer-box" placeholder="1. Identificar..." rows="4"></textarea>
+<div class="action-buttons">
+<button class="btn btn-verify" onclick="checkAnswer(this)">✅ Verificar</button>
+<button class="btn btn-warning" onclick="toggleHint(this)">💡 Pista</button>
+<label class="complete-checkbox"><input onchange="updateProgress(this)" type="checkbox"/> Completado</label>
+</div>
+<div class="answer-feedback"></div>
+</div>
+<div class="hint-content">
+<h4>💡 Pista:</h4>
+<ul>
+<li>Las cinco funciones forman un ciclo continuo de mejora</li>
+<li>La primera función se enfoca en identificar activos y riesgos</li>
+<li>La última función se enfoca en recuperar y mejorar después de un incidente</li>
+<li>Las funciones son: Identificar, Proteger, Detectar, Responder, Recuperar</li>
+</ul>
+</div>
+</div>
+<div class="exercise" data-difficulty="medium" data-module="1" data-points="20">
+<div class="exercise-header">
+<div><span class="difficulty-badge difficulty-medium">Intermedio</span><span class="exercise-title">CTF-1-14: Impacto Ransomware</span></div>
+<span class="exercise-points">20 pts</span>
+</div>
+<div class="exercise-description">
+<p>Analiza el impacto de un ataque de ransomware en una empresa manufacturera. Menciona:</p>
+<ol>
+<li>2 impactos financieros</li>
+<li>2 impactos operativos</li>
+<li>2 impactos de reputación</li>
+</ol>
+</div>
+<div class="exercise-actions">
+<textarea class="answer-box" placeholder="Escribe el análisis..." rows="4"></textarea>
+<div class="action-buttons">
+<button class="btn btn-verify" onclick="checkAnswer(this)">✅ Verificar</button>
+<button class="btn btn-warning" onclick="toggleHint(this)">💡 Pista</button>
+<label class="complete-checkbox"><input onchange="updateProgress(this)" type="checkbox"/> Completado</label>
+</div>
+<div class="answer-feedback"></div>
+</div>
+<div class="hint-content">
+<h4>💡 Pista:</h4>
+<ul>
+<li><strong>Financieros:</strong> costos de recuperación, pagos de rescate (si se realizan), pérdidas por tiempo de inactividad...</li>
+<li><strong>Operativos:</strong> interrupción de la producción, tiempo de inactividad de sistemas críticos...</li>
+<li><strong>Reputación:</strong> pérdida de confianza de clientes, daño a la imagen de marca, posibles sanciones regulatorias...</li>
+</ul>
+</div>
+</div>
+<div class="exercise" data-difficulty="hard" data-module="1" data-points="30">
+<div class="exercise-header">
+<div><span class="difficulty-badge difficulty-hard">Avanzado</span><span class="exercise-title">CTF-1-16: Investigación CVE</span></div>
+<span class="exercise-points">30 pts</span>
+</div>
+<div class="exercise-description">
+<p>Investiga un CVE reciente (últimos 12 meses). Presenta un informe breve que incluya:</p>
+<ol>
+<li>Número del CVE</li>
+<li>Descripción de la vulnerabilidad</li>
+<li>Sistemas afectados</li>
+<li>Solución recomendada</li>
+</ol>
+<p><em>Escribe el número del CVE (ej: CVE-2024-1234)</em></p>
+</div>
+<div class="exercise-actions">
+<textarea class="answer-box" placeholder="Ej: CVE-2024-1234" rows="2"></textarea>
+<div class="action-buttons">
+<button class="btn btn-verify" onclick="checkAnswer(this)">✅ Verificar</button>
+<button class="btn btn-warning" onclick="toggleHint(this)">💡 Pista</button>
+<label class="complete-checkbox"><input onchange="updateProgress(this)" type="checkbox"/> Completado</label>
+</div>
+<div class="answer-feedback"></div>
+</div>
+<div class="hint-content">
+<h4>💡 Pista:</h4>
+<ul>
+<li>Fuentes oficiales para investigar:</li>
+<ul>
+<li><a href="https://nvd.nist.gov/" target="_blank">NVD (National Vulnerability Database)</a> - Base de datos oficial de vulnerabilidades</li>
+<li><a href="https://www.cvedetails.com/" target="_blank">CVE Details</a> - Información detallada y estadísticas</li>
+</ul>
+<li>Busca CVE con:</li>
+<ul>
+<li>Puntuación CVSS alta (9.0-10.0)</li>
+<li>Fecha de publicación en los últimos 12 meses</li>
+<li>Impacto crítico en sistemas ampliamente utilizados</li>
+</ul>
+</ul>
+</div>
+</div>
+<div class="exercise" data-difficulty="hard" data-module="1" data-points="30">
+<div class="exercise-header">
+<div><span class="difficulty-badge difficulty-hard">Avanzado</span><span class="exercise-title">CTF-1-17: Perfil de Amenaza</span></div>
+<span class="exercise-points">30 pts</span>
+</div>
+<div class="exercise-description">
+<p>Crea un perfil de amenaza para una empresa de comercio electrónico. Incluye:</p>
+<ol>
+<li>3 tipos de atacantes potenciales</li>
+<li>3 motivaciones posibles</li>
+<li>3 activos más probablemente objetivo</li>
+<li>3 capacidades típicas de los atacantes</li>
+</ol>
+<p><em>Escribe "perfil completado" cuando termines</em></p>
+</div>
+<div class="exercise-actions">
+<textarea class="answer-box" placeholder="Escribe 'perfil completado'..." rows="2"></textarea>
+<div class="action-buttons">
+<button class="btn btn-verify" onclick="checkAnswer(this)">✅ Verificar</button>
+<button class="btn btn-warning" onclick="toggleHint(this)">💡 Pista</button>
+<label class="complete-checkbox"><input onchange="updateProgress(this)" type="checkbox"/> Completado</label>
+</div>
+<div class="answer-feedback"></div>
+</div>
+<div class="hint-content">
+<h4>💡 Pista:</h4>
+<ul>
+<li><strong>Atacantes potenciales:</strong></li>
+<ul>
+<li>Cibercriminales organizados</li>
+<li>Competidores deshonestos</li>
+<li>Hacktivistas</li>
+</ul>
+<li><strong>Motivaciones:</strong></li>
+<ul>
+<li>Obtener beneficio económico (robando datos de tarjetas)</li>
+<li>Espionaje industrial</li>
+<li>Vandalismo o protesta</li>
+</ul>
+<li><strong>Activos objetivo:</strong></li>
+<ul>
+<li>Bases de datos de clientes</li>
+<li>Sistemas de pago</li>
+<li>Información de productos y precios</li>
+</ul>
+</ul>
+</div>
+</div>
+<div class="exercise" data-difficulty="hard" data-module="1" data-points="30">
+<div class="exercise-header">
+<div><span class="difficulty-badge difficulty-hard">Avanzado</span><span class="exercise-title">CTF-1-18: Plan de Respuesta</span></div>
+<span class="exercise-points">30 pts</span>
+</div>
+<div class="exercise-description">
+<p>Desarrolla un plan básico de respuesta a incidentes. Debe incluir:</p>
+<ol>
+<li>Objetivo del plan</li>
+<li>Equipo de respuesta (3 roles con sus funciones)</li>
+<li>4 fases de respuesta a un incidente</li>
+<li>2 métricas para evaluar la efectividad</li>
+</ol>
+<p><em>Escribe "plan completado" cuando termines</em></p>
+</div>
+<div class="exercise-actions">
+<textarea class="answer-box" placeholder="Escribe 'plan completado'..." rows="2"></textarea>
+<div class="action-buttons">
+<button class="btn btn-verify" onclick="checkAnswer(this)">✅ Verificar</button>
+<button class="btn btn-warning" onclick="toggleHint(this)">💡 Pista</button>
+<label class="complete-checkbox"><input onchange="updateProgress(this)" type="checkbox"/> Completado</label>
+</div>
+<div class="answer-feedback"></div>
+</div>
+<div class="hint-content">
+<h4>💡 Pista:</h4>
+<ul>
+<li><strong>Objetivo:</strong> Minimizar el impacto de los incidentes de seguridad y restaurar las operaciones normales lo antes posible</li>
+<li><strong>Equipo de respuesta:</strong></li>
+<ul>
+<li>Líder de equipo: coordina todas las actividades de respuesta</li>
+<li>Analista forense: investiga el incidente para determinar su causa</li>
+<li>Especialista en comunicaciones: maneja la comunicación interna y externa</li>
+</ul>
+<li><strong>Fases de respuesta:</strong> Preparación, Detección y Análisis, Contención, Erradicación, Recuperación, Lecciones Aprendidas</li>
+<li><strong>Métricas:</strong> Tiempo medio de detección (MTTD), Tiempo medio de respuesta (MTTR)</li>
+</ul>
+</div>
+</div>
+<div class="exercise" data-difficulty="hard" data-module="1" data-points="30">
+<div class="exercise-header">
+<div><span class="difficulty-badge difficulty-hard">Avanzado</span><span class="exercise-title">CTF-1-19: Evaluación de Madurez</span></div>
+<span class="exercise-points">30 pts</span>
+</div>
+<div class="exercise-description">
+<p>Usa un modelo de madurez (como CMM o CMMI) para evaluar una organización ficticia. Incluye:</p>
+<ol>
+<li>3 dominios de evaluación</li>
+<li>Nivel de madurez actual (1-5) para cada dominio</li>
+<li>1 recomendación de mejora por dominio</li>
+</ol>
+<p><em>Escribe "evaluación completada" cuando termines</em></p>
+</div>
+<div class="exercise-actions">
+<textarea class="answer-box" placeholder="Escribe 'evaluación completada'..." rows="2"></textarea>
+<div class="action-buttons">
+<button class="btn btn-verify" onclick="checkAnswer(this)">✅ Verificar</button>
+<button class="btn btn-warning" onclick="toggleHint(this)">💡 Pista</button>
+<label class="complete-checkbox"><input onchange="updateProgress(this)" type="checkbox"/> Completado</label>
+</div>
+<div class="answer-feedback"></div>
+</div>
+<div class="hint-content">
+<h4>💡 Pista:</h4>
+<ul>
+<li><strong>Dominios típicos de evaluación:</strong></li>
+<ul>
+<li>Gobernanza y Gestión de Riesgos</li>
+<li>Protección de Activos</li>
+<li>Detección y Respuesta a Incidentes</li>
+</ul>
+<li><strong>Niveles de madurez:</strong></li>
+<ul>
+<li>1 = Inicial (procesos ad hoc)</li>
+<li>2 = Repetible (procesos básicos)</li>
+<li>3 = Definido (procesos estandarizados)</li>
+<li>4 = Gestionado (procesos medidos)</li>
+<li>5 = Optimizado (mejora continua)</li>
+</ul>
+<li><strong>Recomendaciones:</strong> Implementar políticas formales, automatizar procesos, establecer métricas...</li>
+</ul>
+</div>
+</div>
+<div class="exercise" data-difficulty="hard" data-module="1" data-points="30">
+<div class="exercise-header">
+<div><span class="difficulty-badge difficulty-hard">Avanzado</span><span class="exercise-title">CTF-1-20: Normativas Aplicables</span></div>
+<span class="exercise-points">30 pts</span>
+</div>
+<div class="exercise-description">
+<p>Investiga y explica brevemente cómo afectan estas normativas a una empresa que opera en la UE:</p>
+<ol>
+<li>RGPD (GDPR)</li>
+<li>NIS 2</li>
+<li>ISO 27001</li>
+</ol>
+<p><em>Escribe "investigación completada" cuando termines</em></p>
+</div>
+<div class="exercise-actions">
+<textarea class="answer-box" placeholder="Escribe 'investigación completada'..." rows="2"></textarea>
+<div class="action-buttons">
+<button class="btn btn-verify" onclick="checkAnswer(this)">✅ Verificar</button>
+<button class="btn btn-warning" onclick="toggleHint(this)">💡 Pista</button>
+<label class="complete-checkbox"><input onchange="updateProgress(this)" type="checkbox"/> Completado</label>
+</div>
+<div class="answer-feedback"></div>
+</div>
+<div class="hint-content">
+<h4>💡 Pista:</h4>
+<ul>
+<li><strong>RGPD (GDPR):</strong></li>
+<ul>
+<li>Reglamento General de Protección de Datos de la UE</li>
+<li>Afecta a cualquier empresa que procese datos de ciudadanos de la UE</li>
+<li>Requiere consentimiento explícito, derecho al olvido, notificación de brechas...</li>
+</ul>
+<li><strong>NIS 2:</strong></li>
+<ul>
+<li>Directiva de Seguridad de Redes y Sistemas de Información</li>
+<li>Se aplica a sectores críticos como energía, transporte, banca, salud...</li>
+<li>Requiere medidas de seguridad técnicas y organizativas</li>
+</ul>
+<li><strong>ISO 27001:</strong></li>
+<ul>
+<li>Estándar internacional para Sistemas de Gestión de Seguridad de la Información (SGSI)</li>
+<li>Proporciona un marco para gestionar la seguridad de la información</li>
+<li>Incluye controles para proteger la confidencialidad, integridad y disponibilidad</li>
+</ul>
+</ul>
+</div>
+</div>
+</div>
+<!-- MÓDULO 2 -->
+<div class="module" id="module-2">
+<div class="module-header">
+<h2><span class="module-title-icon">🌐</span> Módulo 2: Fundamentos de Redes</h2>
+<div class="module-stats">
+<span>✅ 7 Fáciles</span>
+<span>⚠️ 7 Intermedios</span>
+<span>🚨 6 Avanzados</span>
+</div>
+</div>
+<div class="exercise" data-difficulty="easy" data-module="2" data-points="10">
+<div class="exercise-header">
+<div><span class="difficulty-badge difficulty-easy">Fácil</span><span class="exercise-title">CTF-2-01: Modelo OSI</span></div>
+<span class="exercise-points">10 pts</span>
+</div>
+<div class="exercise-description">
+<p>Nombra las <strong>7 capas del modelo OSI</strong> en orden, de la más baja a la más alta.</p>
+<p><em>Sepáralas con comas</em></p>
+</div>
+<div class="exercise-actions">
+<textarea class="answer-box" placeholder="Ej: Física, Enlace de datos..." rows="2"></textarea>
+<div class="action-buttons">
+<button class="btn btn-verify" onclick="checkAnswer(this)">✅ Verificar</button>
+<button class="btn btn-warning" onclick="toggleHint(this)">💡 Pista</button>
+<label class="complete-checkbox"><input onchange="updateProgress(this)" type="checkbox"/> Completado</label>
+</div>
+<div class="answer-feedback"></div>
+</div>
+<div class="hint-content">
+<h4>💡 Pista:</h4>
+<ul>
+<li>La primera capa (Capa 1) se encarga de la transmisión física de bits a través de medios como cables o ondas de radio</li>
+<li>La última capa (Capa 7) es la que interactúa directamente con las aplicaciones y el usuario final</li>
+<li>Recuerda la mnemotecnia en español: "Todos los sistemas pueden ser un problema" o en inglés: "All People Seem To Need Data Processing"</li>
+<li>Las capas intermedias manejan aspectos como el direccionamiento, el transporte confiable y la presentación de datos</li>
+</ul>
+</div>
+</div>
+<div class="exercise" data-difficulty="easy" data-module="2" data-points="10">
+<div class="exercise-header">
+<div><span class="difficulty-badge difficulty-easy">Fácil</span><span class="exercise-title">CTF-2-02: Modelo TCP/IP</span></div>
+<span class="exercise-points">10 pts</span>
+</div>
+<div class="exercise-description">
+<p>Nombra las <strong>4 capas del modelo TCP/IP</strong> en orden.</p>
+<p><em>Sepáralas con comas</em></p>
+</div>
+<div class="exercise-actions">
+<textarea class="answer-box" placeholder="Ej: Acceso a la red..." rows="2"></textarea>
+<div class="action-buttons">
+<button class="btn btn-verify" onclick="checkAnswer(this)">✅ Verificar</button>
+<button class="btn btn-warning" onclick="toggleHint(this)">💡 Pista</button>
+<label class="complete-checkbox"><input onchange="updateProgress(this)" type="checkbox"/> Completado</label>
+</div>
+<div class="answer-feedback"></div>
+</div>
+<div class="hint-content">
+<h4>💡 Pista:</h4>
+<ul>
+<li>La primera capa combina las funciones de las capas 1 y 2 del modelo OSI</li>
+<li>La segunda capa se encarga del direccionamiento lógico y el enrutamiento (similar a la Capa 3 de OSI)</li>
+<li>La tercera capa maneja el transporte de datos entre aplicaciones (similar a la Capa 4 de OSI)</li>
+<li>La última capa combina las funciones de las capas 5, 6 y 7 de OSI</li>
+</ul>
+</div>
+</div>
+<div class="exercise" data-difficulty="easy" data-module="2" data-points="10">
+<div class="exercise-header">
+<div><span class="difficulty-badge difficulty-easy">Fácil</span><span class="exercise-title">CTF-2-03: Protocolos de Aplicación</span></div>
+<span class="exercise-points">10 pts</span>
+</div>
+<div class="exercise-description">
+<p>Nombra <strong>5 protocolos</strong> que operan en la capa de Aplicación.</p>
+<p><em>Sepáralos con comas</em></p>
+</div>
+<div class="exercise-actions">
+<textarea class="answer-box" placeholder="Ej: HTTP, HTTPS..." rows="2"></textarea>
+<div class="action-buttons">
+<button class="btn btn-verify" onclick="checkAnswer(this)">✅ Verificar</button>
+<button class="btn btn-warning" onclick="toggleHint(this)">💡 Pista</button>
+<label class="complete-checkbox"><input onchange="updateProgress(this)" type="checkbox"/> Completado</label>
+</div>
+<div class="answer-feedback"></div>
+</div>
+<div class="hint-content">
+<h4>💡 Pista:</h4>
+<ul>
+<li>Piensa en protocolos que usas a diario:</li>
+<ul>
+<li>Para navegar por la web (seguro y no seguro)</li>
+<li>Para transferir archivos</li>
+<li>Para enviar y recibir correos electrónicos</li>
+<li>Para resolver nombres de dominio</li>
+</ul>
+<li>Incluye tanto protocolos que usas directamente como aquellos que funcionan en segundo plano</li>
+</ul>
+</div>
+</div>
+<div class="exercise" data-difficulty="easy" data-module="2" data-points="10">
+<div class="exercise-header">
+<div><span class="difficulty-badge difficulty-easy">Fácil</span><span class="exercise-title">CTF-2-04: Clases de IP</span></div>
+<span class="exercise-points">10 pts</span>
+</div>
+<div class="exercise-description">
+<p>¿A qué clase pertenece la dirección IP <code>192.168.1.1</code>?</p>
+</div>
+<div class="exercise-actions">
+<textarea class="answer-box" placeholder="Ej: Clase C" rows="1"></textarea>
+<div class="action-buttons">
+<button class="btn btn-verify" onclick="checkAnswer(this)">✅ Verificar</button>
+<button class="btn btn-warning" onclick="toggleHint(this)">💡 Pista</button>
+<label class="complete-checkbox"><input onchange="updateProgress(this)" type="checkbox"/> Completado</label>
+</div>
+<div class="answer-feedback"></div>
+</div>
+<div class="hint-content">
+<h4>💡 Pista:</h4>
+<ul>
+<li>Las direcciones IP se dividen en clases según los primeros bits:</li>
+<ul>
+<li>Clase A: 0.0.0.0 a 127.255.255.255 (primer bit 0)</li>
+<li>Clase B: 128.0.0.0 a 191.255.255.255 (primeros bits 10)</li>
+<li>Clase C: 192.0.0.0 a 223.255.255.255 (primeros bits 110)</li>
+<li>Clase D: 224.0.0.0 a 239.255.255.255 (multicast)</li>
+<li>Clase E: 240.0.0.0 a 255.255.255.255 (reservado)</li>
+</ul>
+<li>La dirección 192.168.1.1 está en el rango de direcciones privadas y pertenece a una clase específica</li>
+</ul>
+</div>
+</div>
+<div class="exercise" data-difficulty="easy" data-module="2" data-points="10">
+<div class="exercise-header">
+<div><span class="difficulty-badge difficulty-easy">Fácil</span><span class="exercise-title">CTF-2-05: Direcciones Privadas</span></div>
+<span class="exercise-points">10 pts</span>
+</div>
+<div class="exercise-description">
+<p>Nombra los <strong>3 rangos de direcciones IP privadas</strong> definidos en RFC 1918.</p>
+</div>
+<div class="exercise-actions">
+<textarea class="answer-box" placeholder="Ej: 10.0.0.0/8..." rows="2"></textarea>
+<div class="action-buttons">
+<button class="btn btn-verify" onclick="checkAnswer(this)">✅ Verificar</button>
+<button class="btn btn-warning" onclick="toggleHint(this)">💡 Pista</button>
+<label class="complete-checkbox"><input onchange="updateProgress(this)" type="checkbox"/> Completado</label>
+</div>
+<div class="answer-feedback"></div>
+</div>
+<div class="hint-content">
+<h4>💡 Pista:</h4>
+<ul>
+<li>Estos rangos están reservados para redes privadas y no son enrutables en Internet</li>
+<li>Cada rango tiene una notación CIDR específica:</li>
+<ul>
+<li>El primero comienza con 10 y tiene una máscara de /8</li>
+<li>El segundo comienza con 172.16 y tiene una máscara de /12</li>
+<li>El tercero comienza con 192.168 y tiene una máscara de /16</li>
+</ul>
+<li>Puedes encontrar más información en el documento RFC 1918</li>
+</ul>
+</div>
+</div>
+<div class="exercise" data-difficulty="easy" data-module="2" data-points="10">
+<div class="exercise-header">
+<div><span class="difficulty-badge difficulty-easy">Fácil</span><span class="exercise-title">CTF-2-06: Puertos por Defecto</span></div>
+<span class="exercise-points">10 pts</span>
+</div>
+<div class="exercise-description">
+<p>Relaciona cada servicio con su puerto por defecto:</p>
+<ol>
+<li>HTTP</li>
+<li>HTTPS</li>
+<li>FTP</li>
+<li>SSH</li>
+<li>SMTP</li>
+</ol>
+<p><em>Formato: 1. HTTP-80, 2. HTTPS-443...</em></p>
+</div>
+<div class="exercise-actions">
+<textarea class="answer-box" placeholder="Escribe las relaciones..." rows="3"></textarea>
+<div class="action-buttons">
+<button class="btn btn-verify" onclick="checkAnswer(this)">✅ Verificar</button>
+<button class="btn btn-warning" onclick="toggleHint(this)">💡 Pista</button>
+<label class="complete-checkbox"><input onchange="updateProgress(this)" type="checkbox"/> Completado</label>
+</div>
+<div class="answer-feedback"></div>
+</div>
+<div class="hint-content">
+<h4>💡 Pista:</h4>
+<ul>
+<li>Los puertos bien conocidos (0-1023) están asignados a servicios estándar:</li>
+<ul>
+<li>HTTP y HTTPS son puertos para navegación web (uno seguro, uno no)</li>
+<li>FTP es para transferencia de archivos y usa dos puertos (uno para control, otro para datos)</li>
+<li>SSH es para acceso seguro a servidores remotos</li>
+<li>SMTP es para envío de correos electrónicos</li>
+</ul>
+<li>Puedes consultar la lista completa en <a href="https://www.iana.org/assignments/service-names-port-numbers/service-names-port-numbers.txt" target="_blank">IANA</a></li>
+</ul>
+</div>
+</div>
+<div class="exercise" data-difficulty="easy" data-module="2" data-points="10">
+<div class="exercise-header">
+<div><span class="difficulty-badge difficulty-easy">Fácil</span><span class="exercise-title">CTF-2-07: Dispositivos de Red</span></div>
+<span class="exercise-points">10 pts</span>
+</div>
+<div class="exercise-description">
+<p>Nombra <strong>5 dispositivos de red</strong> y su función principal.</p>
+<p><em>Formato: 1. Router - Conecta redes...</em></p>
+</div>
+<div class="exercise-actions">
+<textarea class="answer-box" placeholder="Escribe 5 dispositivos..." rows="3"></textarea>
+<div class="action-buttons">
+<button class="btn btn-verify" onclick="checkAnswer(this)">✅ Verificar</button>
+<button class="btn btn-warning" onclick="toggleHint(this)">💡 Pista</button>
+<label class="complete-checkbox"><input onchange="updateProgress(this)" type="checkbox"/> Completado</label>
+</div>
+<div class="answer-feedback"></div>
+</div>
+<div class="hint-content">
+<h4>💡 Pista:</h4>
+<ul>
+<li>Piensa en dispositivos que:</li>
+<ul>
+<li>Conectan diferentes redes entre sí</li>
+<li>Filtran el tráfico de red según reglas de seguridad</li>
+<li>Amplifican señales en redes de área local</li>
+<li>Dirigen el tráfico dentro de una red local</li>
+<li>Proporcionan conexión inalámbrica a la red</li>
+</ul>
+<li>Ejemplos comunes: Router, Switch, Hub, Firewall, Access Point...</li>
+</ul>
+</div>
+</div>
+<div class="exercise" data-difficulty="medium" data-module="2" data-points="20">
+<div class="exercise-header">
+<div><span class="difficulty-badge difficulty-medium">Intermedio</span><span class="exercise-title">CTF-2-08: Subnetting</span></div>
+<span class="exercise-points">20 pts</span>
+</div>
+<div class="exercise-description">
+<p>Dada la red <code>192.168.1.0/24</code>, calcula:</p>
+<ol>
+<li>Número de subredes posibles con máscara /26</li>
+<li>Número de hosts por subred</li>
+<li>Rango de direcciones para la primera subred</li>
+</ol>
+</div>
+<div class="exercise-actions">
+<textarea class="answer-box" placeholder="1. Número de subredes..." rows="3"></textarea>
+<div class="action-buttons">
+<button class="btn btn-verify" onclick="checkAnswer(this)">✅ Verificar</button>
+<button class="btn btn-warning" onclick="toggleHint(this)">💡 Pista</button>
+<label class="complete-checkbox"><input onchange="updateProgress(this)" type="checkbox"/> Completado</label>
+</div>
+<div class="answer-feedback"></div>
+</div>
+<div class="hint-content">
+<h4>💡 Pista:</h4>
+<ul>
+<li>La máscara /24 tiene 24 bits para la red y 8 para hosts</li>
+<li>La máscara /26 tiene 26 bits para la red, por lo que:</li>
+<ul>
+<li>Bits prestados = 26 - 24 = 2 bits</li>
+<li>Número de subredes = 2^2 = 4 subredes</li>
+<li>Bits para hosts = 8 - 2 = 6 bits</li>
+<li>Número de hosts por subred = 2^6 - 2 = 62 hosts (restamos 2 para la dirección de red y broadcast)</li>
+</ul>
+<li>Para el rango de la primera subred:</li>
+<ul>
+<li>Dirección de red: 192.168.1.0</li>
+<li>Dirección de broadcast: 192.168.1.63</li>
+<li>Rango de hosts: 192.168.1.1 a 192.168.1.62</li>
+</ul>
+</ul>
+</div>
+</div>
+<div class="exercise" data-difficulty="medium" data-module="2" data-points="20">
+<div class="exercise-header">
+<div><span class="difficulty-badge difficulty-medium">Intermedio</span><span class="exercise-title">CTF-2-09: Firewall con iptables</span></div>
+<span class="exercise-points">20 pts</span>
+</div>
+<div class="exercise-description">
+<p>Configura un firewall para:</p>
+<ol>
+<li>Bloquear todo el tráfico entrante por defecto</li>
+<li>Permitir HTTP (80) y HTTPS (443)</li>
+<li>Permitir SSH (22) solo desde 192.168.1.100</li>
+</ol>
+<p><em>Escribe las reglas de iptables</em></p>
+</div>
+<div class="exercise-actions">
+<textarea class="answer-box" placeholder="Ej: iptables -P INPUT DROP..." rows="3"></textarea>
+<div class="action-buttons">
+<button class="btn btn-verify" onclick="checkAnswer(this)">✅ Verificar</button>
+<button class="btn btn-warning" onclick="toggleHint(this)">💡 Pista</button>
+<label class="complete-checkbox"><input onchange="updateProgress(this)" type="checkbox"/> Completado</label>
+</div>
+<div class="answer-feedback"></div>
+</div>
+<div class="hint-content">
+<h4>💡 Pista:</h4>
+<ul>
+<li><strong>Para bloquear todo el tráfico entrante por defecto:</strong></li>
+<ul>
+<li><code>iptables -P INPUT DROP</code> - Establece la política por defecto para la cadena INPUT</li>
+</ul>
+<li><strong>Para permitir puertos específicos:</strong></li>
+<ul>
+<li><code>iptables -A INPUT -p tcp --dport 80 -j ACCEPT</code> - Permite tráfico TCP en el puerto 80</li>
+<li><code>iptables -A INPUT -p tcp --dport 443 -j ACCEPT</code> - Permite tráfico TCP en el puerto 443</li>
+</ul>
+<li><strong>Para restringir por dirección IP:</strong></li>
+<ul>
+<li><code>iptables -A INPUT -p tcp --dport 22 -s 192.168.1.100 -j ACCEPT</code> - Permite SSH solo desde 192.168.1.100</li>
+</ul>
+<li><strong>Nota importante:</strong> Las reglas se evalúan en orden, así que las reglas de ACEPT deben ir antes que la política DROP</li>
+</ul>
+</div>
+</div>
+<div class="exercise" data-difficulty="medium" data-module="2" data-points="20">
+<div class="exercise-header">
+<div><span class="difficulty-badge difficulty-medium">Intermedio</span><span class="exercise-title">CTF-2-10: TCP vs UDP</span></div>
+<span class="exercise-points">20 pts</span>
+</div>
+<div class="exercise-description">
+<p>Explica las diferencias entre TCP y UDP en términos de:</p>
+<ol>
+<li>Tipo de conexión</li>
+<li>Fiabilidad</li>
+<li>Velocidad</li>
+<li>Uso típico</li>
+</ol>
+</div>
+<div class="exercise-actions">
+<textarea class="answer-box" placeholder="1. Tipo de conexión..." rows="4"></textarea>
+<div class="action-buttons">
+<button class="btn btn-verify" onclick="checkAnswer(this)">✅ Verificar</button>
+<button class="btn btn-warning" onclick="toggleHint(this)">💡 Pista</button>
+<label class="complete-checkbox"><input onchange="updateProgress(this)" type="checkbox"/> Completado</label>
+</div>
+<div class="answer-feedback"></div>
+</div>
+<div class="hint-content">
+<h4>💡 Pista:</h4>
+<ul>
+<li><strong>Tipo de conexión:</strong></li>
+<ul>
+<li>TCP es orientado a conexión (requiere establecer una conexión antes de enviar datos)</li>
+<li>UDP es sin conexión (envía datos sin establecer conexión previa)</li>
+</ul>
+<li><strong>Fiabilidad:</strong></li>
+<ul>
+<li>TCP garantiza la entrega de datos (usa acuses de recibo, retransmisiones, control de flujo)</li>
+<li>UDP no garantiza la entrega (no tiene mecanismo de verificación)</li>
+</ul>
+<li><strong>Velocidad:</strong></li>
+<ul>
+<li>TCP es más lento debido a la sobrecarga de establecer conexión y verificar la entrega</li>
+<li>UDP es más rápido ya que no tiene esta sobrecarga</li>
+</ul>
+<li><strong>Uso típico:</strong></li>
+<ul>
+<li>TCP: Navegación web (HTTP/HTTPS), correo electrónico (SMTP), transferencia de archivos (FTP)</li>
+<li>UDP: Transmisión de video en tiempo real, videoconferencia, DNS, VoIP</li>
+</ul>
+</ul>
+</div>
+</div>
+<div class="exercise" data-difficulty="medium" data-module="2" data-points="20">
+<div class="exercise-header">
+<div><span class="difficulty-badge difficulty-medium">Intermedio</span><span class="exercise-title">CTF-2-11: Resolución DNS</span></div>
+<span class="exercise-points">20 pts</span>
+</div>
+<div class="exercise-description">
+<p>Explica el proceso de resolución DNS cuando un usuario escribe <code>www.ejemplo.com</code> en su navegador.</p>
+<p>Menciona al menos 4 pasos del proceso.</p>
+</div>
+<div class="exercise-actions">
+<textarea class="answer-box" placeholder="1. El navegador..." rows="4"></textarea>
+<div class="action-buttons">
+<button class="btn btn-verify" onclick="checkAnswer(this)">✅ Verificar</button>
+<button class="btn btn-warning" onclick="toggleHint(this)">💡 Pista</button>
+<label class="complete-checkbox"><input onchange="updateProgress(this)" type="checkbox"/> Completado</label>
+</div>
+<div class="answer-feedback"></div>
+</div>
+<div class="hint-content">
+<h4>💡 Pista:</h4>
+<ul>
+<li><strong>Paso 1:</strong> El navegador verifica su caché local para ver si ya tiene la dirección IP de www.ejemplo.com</li>
+<li><strong>Paso 2:</strong> Si no está en caché, el navegador consulta al resolver DNS configurado en el sistema operativo</li>
+<li><strong>Paso 3:</strong> El resolver DNS consulta sus propios registros en caché</li>
+<li><strong>Paso 4:</strong> Si el resolver no tiene la información, consulta a los servidores DNS raíz</li>
+<li><strong>Paso 5:</strong> Los servidores raíz redirigen al resolver a los servidores TLD (Top-Level Domain) para .com</li>
+<li><strong>Paso 6:</strong> Los servidores TLD redirigen al resolver a los servidores autoritativos para ejemplo.com</li>
+<li><strong>Paso 7:</strong> Los servidores autoritativos devuelven la dirección IP de www.ejemplo.com</li>
+<li><strong>Paso 8:</strong> El resolver DNS devuelve la dirección IP al navegador y la almacena en caché</li>
+</ul>
+</div>
+</div>
+<div class="exercise" data-difficulty="hard" data-module="2" data-points="30">
+<div class="exercise-header">
+<div><span class="difficulty-badge difficulty-hard">Avanzado</span><span class="exercise-title">CTF-2-15: Escaneo con Nmap</span></div>
+<span class="exercise-points">30 pts</span>
+</div>
+<div class="exercise-description">
+<p>Usa Nmap para realizar un escaneo completo de la red <code>192.168.1.0/24</code>. Escribe los comandos para:</p>
+<ol>
+<li>Descubrir hosts activos (ping scan)</li>
+<li>Escaneo de puertos TCP abiertos (SYN scan)</li>
+<li>Detección de sistema operativo</li>
+<li>Detección de versiones de servicios</li>
+<li>Escaneo agresivo con todos los tipos de detección</li>
+</ol>
+<p><em>Escribe los comandos que usarías</em></p>
+</div>
+<div class="exercise-actions">
+<textarea class="answer-box" placeholder="Ej: nmap -sn 192.168.1.0/24..." rows="5"></textarea>
+<div class="action-buttons">
+<button class="btn btn-verify" onclick="checkAnswer(this)">✅ Verificar</button>
+<button class="btn btn-warning" onclick="toggleHint(this)">💡 Pista</button>
+<label class="complete-checkbox"><input onchange="updateProgress(this)" type="checkbox"/> Completado</label>
+</div>
+<div class="answer-feedback"></div>
+</div>
+<div class="hint-content">
+<h4>💡 Pista:</h4>
+<ul>
+<li><strong>Descubrir hosts activos:</strong></li>
+<ul>
+<li><code>nmap -sn 192.168.1.0/24</code> - Realiza un ping scan para descubrir qué hosts están activos</li>
+</ul>
+<li><strong>Escaneo de puertos TCP:</strong></li>
+<ul>
+<li><code>nmap -sS 192.168.1.0/24</code> - SYN scan (sigiloso, no completa la conexión)</li>
+<li><code>nmap -sT 192.168.1.0/24</code> - TCP connect scan (completa la conexión)</li>
+</ul>
+<li><strong>Detección de SO:</strong></li>
+<ul>
+<li><code>nmap -O 192.168.1.0/24</code> - Activa la detección de sistema operativo</li>
+</ul>
+<li><strong>Detección de versiones:</strong></li>
+<ul>
+<li><code>nmap -sV 192.168.1.0/24</code> - Detecta versiones de servicios</li>
+</ul>
+<li><strong>Escaneo agresivo:</strong></li>
+<ul>
+<li><code>nmap -A 192.168.1.0/24</code> - Activa detección de OS, versiones, scripts y traceroute</li>
+</ul>
+<li><strong>Opciones útiles:</strong></li>
+<ul>
+<li><code>-p-</code> - Escanear todos los puertos (1-65535)</li>
+<li><code>-T4</code> - Velocidad de escaneo agresiva</li>
+<li><code>-oN output.txt</code> - Guardar resultados en un archivo de texto</li>
+</ul>
+</ul>
+</div>
+</div>
+</div>
+<!-- MÓDULO 3 -->
+<div class="module" id="module-3">
+<div class="module-header">
+<h2><span class="module-title-icon">🦠</span> Módulo 3: Amenazas y Vulnerabilidades</h2>
+<div class="module-stats">
+<span>✅ 7 Fáciles</span>
+<span>⚠️ 7 Intermedios</span>
+<span>🚨 6 Avanzados</span>
+</div>
+</div>
+<div class="exercise" data-difficulty="easy" data-module="3" data-points="10">
+<div class="exercise-header">
+<div><span class="difficulty-badge difficulty-easy">Fácil</span><span class="exercise-title">CTF-3-01: Tipos de Malware</span></div>
+<span class="exercise-points">10 pts</span>
+</div>
+<div class="exercise-description">
+<p>Nombra <strong>5 tipos de malware</strong> y da una breve descripción de cada uno.</p>
+<p><em>Formato: 1. Virus - Se adjunta a archivos ejecutables...</em></p>
+</div>
+<div class="exercise-actions">
+<textarea class="answer-box" placeholder="Ej: 1. Virus - Se adjunta a archivos..." rows="4"></textarea>
+<div class="action-buttons">
+<button class="btn btn-verify" onclick="checkAnswer(this)">✅ Verificar</button>
+<button class="btn btn-warning" onclick="toggleHint(this)">💡 Pista</button>
+<label class="complete-checkbox"><input onchange="updateProgress(this)" type="checkbox"/> Completado</label>
+</div>
+<div class="answer-feedback"></div>
+</div>
+<div class="hint-content">
+<h4>💡 Pista:</h4>
+<ul>
+<li>Piensa en diferentes comportamientos maliciosos:</li>
+<ul>
+<li>Software que se adjunta a otros programas y se replica</li>
+<li>Software que se propaga por sí solo a través de redes</li>
+<li>Software que parece legítimo pero contiene código malicioso</li>
+<li>Software que cifra archivos y exige pago para descifrarlos</li>
+<li>Software que recopila información sin el conocimiento del usuario</li>
+</ul>
+<li>Tipos comunes: Virus, Gusano, Troyano, Ransomware, Spyware, Adware, Rootkit</li>
+</ul>
+</div>
+</div>
+<div class="exercise" data-difficulty="easy" data-module="3" data-points="10">
+<div class="exercise-header">
+<div><span class="difficulty-badge difficulty-easy">Fácil</span><span class="exercise-title">CTF-3-02: Fases de un Ataque</span></div>
+<span class="exercise-points">10 pts</span>
+</div>
+<div class="exercise-description">
+<p>Nombra las <strong>5 fases del ciclo de vida de un ataque cibernético</strong> en orden.</p>
+<p><em>Sepáralas con comas</em></p>
+</div>
+<div class="exercise-actions">
+<textarea class="answer-box" placeholder="Ej: Reconocimiento, Escaneo..." rows="2"></textarea>
+<div class="action-buttons">
+<button class="btn btn-verify" onclick="checkAnswer(this)">✅ Verificar</button>
+<button class="btn btn-warning" onclick="toggleHint(this)">💡 Pista</button>
+<label class="complete-checkbox"><input onchange="updateProgress(this)" type="checkbox"/> Completado</label>
+</div>
+<div class="answer-feedback"></div>
+</div>
+<div class="hint-content">
+<h4>💡 Pista:</h4>
+<ul>
+<li>Estas fases siguen un orden lógico similar al de cualquier proceso de planificación:</li>
+<ul>
+<li><strong>Primera fase:</strong> Recolectar información sobre el objetivo (qué sistemas tiene, qué vulnerabilidades podrían existir)</li>
+<li><strong>Segunda fase:</strong> Probar los sistemas del objetivo para encontrar puntos de entrada</li>
+<li><strong>Tercera fase:</strong> Obtener acceso inicial al sistema</li>
+<li><strong>Cuarta fase:</strong> Mantener el acceso y posiblemente escalar privilegios</li>
+<li><strong>Quinta fase:</strong> Eliminar evidencias del ataque para no ser detectado</li>
+</ul>
+<li>Estas fases son conocidas como: Reconocimiento, Escaneo, Obtención de acceso, Mantenimiento del acceso, Cubrimiento de huellas</li>
+</ul>
+</div>
+</div>
+<div class="exercise" data-difficulty="medium" data-module="3" data-points="20">
+<div class="exercise-header">
+<div><span class="difficulty-badge difficulty-medium">Intermedio</span><span class="exercise-title">CTF-3-08: SQL Injection</span></div>
+<span class="exercise-points">20 pts</span>
+</div>
+<div class="exercise-description">
+<p>Explica cómo funciona un ataque de SQL Injection y proporciona:</p>
+<ol>
+<li>Un ejemplo de payload para autenticación bypass</li>
+<li>2 formas de prevenir este ataque</li>
+</ol>
+</div>
+<div class="exercise-actions">
+<textarea class="answer-box" placeholder="SQL Injection funciona cuando..." rows="4"></textarea>
+<div class="action-buttons">
+<button class="btn btn-verify" onclick="checkAnswer(this)">✅ Verificar</button>
+<button class="btn btn-warning" onclick="toggleHint(this)">💡 Pista</button>
+<label class="complete-checkbox"><input onchange="updateProgress(this)" type="checkbox"/> Completado</label>
+</div>
+<div class="answer-feedback"></div>
+</div>
+<div class="hint-content">
+<h4>💡 Pista:</h4>
+<ul>
+<li><strong>Cómo funciona:</strong> SQL Injection ocurre cuando una aplicación concatena directamente la entrada del usuario a consultas SQL sin la validación o sanitización adecuada. Esto permite a un atacante inyectar código SQL malicioso que será ejecutado por la base de datos.</li>
+<li><strong>Ejemplo de payload para autenticación bypass:</strong></li>
+<ul>
+<li>En un formulario de login con consulta: <code>SELECT * FROM usuarios WHERE nombre = '$usuario' AND contrasena = '$contrasena'</code></li>
+<li>Payload: <code>admin' -- </code> o <code>admin' OR '1'='1</code></li>
+<li>Esto hace que la condición WHERE siempre sea verdadera, permitiendo el acceso</li>
+</ul>
+<li><strong>Formas de prevenir:</strong></li>
+<ul>
+<li><strong>Consultas parametrizadas:</strong> Usar sentencias preparadas (prepared statements) que separan el código SQL de los datos</li>
+<li><strong>Sanitización de entrada:</strong> Validar y limpiar todas las entradas de usuario antes de usarlas en consultas</li>
+<li><strong>Principio de menor privilegio:</strong> La base de datos debe ejecutarse con el mínimo de privilegios necesarios</li>
+<li><strong>ORM:</strong> Usar un mapeador objeto-relacional que maneje automáticamente la sanitización</li>
+</ul>
+</ul>
+</div>
+</div>
+</div>
+<!-- MÓDULOS 4-7 -->
+<div class="module" id="module-4">
+<div class="module-header">
+<h2><span class="module-title-icon">🔐</span> Módulo 4: Criptografía</h2>
+<div class="module-stats"><span>✅ 5 Fáciles</span></div>
+</div>
+<div class="exercise" data-difficulty="easy" data-module="4" data-points="10">
+<div class="exercise-header"><div><span class="difficulty-badge difficulty-easy">Fácil</span><span class="exercise-title">CTF-4-01: Conceptos Básicos</span></div><span class="exercise-points">10 pts</span></div>
+<div class="exercise-description"><p>Define: Cifrado, Descifrado, Clave, Algoritmo.</p></div>
+<div class="exercise-actions">
+<textarea class="answer-box" placeholder="Escribe las definiciones..." rows="3"></textarea>
+<div class="action-buttons">
+<button class="btn btn-verify" onclick="checkAnswer(this)">✅ Verificar</button>
+<button class="btn btn-warning" onclick="toggleHint(this)">💡 Pista</button>
+<label class="complete-checkbox"><input onchange="updateProgress(this)" type="checkbox"/> Completado</label>
+</div>
+<div class="answer-feedback"></div>
+</div>
+<div class="hint-content"><h4>💡 Pista:</h4><ul><li>Cifrado: proceso de convertir texto claro en texto cifrado usando algoritmo y clave</li><li>Descifrado: proceso inverso al cifrado</li></ul></div>
+</div>
+</div>
+<div class="module" id="module-5">
+<div class="module-header"><h2><span class="module-title-icon">🔒</span> Módulo 5: Seguridad en Sistemas</h2></div>
+<div class="exercise" data-difficulty="easy" data-module="5" data-points="10">
+<div class="exercise-header"><div><span class="difficulty-badge difficulty-easy">Fácil</span><span class="exercise-title">CTF-5-01: Gestión de Usuarios</span></div><span class="exercise-points">10 pts</span></div>
+<div class="exercise-description"><p>Comandos para: crear usuario, establecer contraseña, añadir a sudo.</p></div>
+<div class="exercise-actions">
+<textarea class="answer-box" placeholder="Ej: sudo adduser..." rows="3"></textarea>
+<div class="action-buttons">
+<button class="btn btn-verify" onclick="checkAnswer(this)">✅ Verificar</button>
+<button class="btn btn-warning" onclick="toggleHint(this)">💡 Pista</button>
+<label class="complete-checkbox"><input onchange="updateProgress(this)" type="checkbox"/> Completado</label>
+</div>
+<div class="answer-feedback"></div>
+</div>
+<div class="hint-content"><h4>💡 Pista:</h4><ul><li>Crear usuario: <code>sudo adduser nombre</code></li><li>Contraseña: <code>sudo passwd nombre</code></li></ul></div>
+</div>
+</div>
+<div class="module" id="module-6">
+<div class="module-header"><h2><span class="module-title-icon">🛡️</span> Módulo 6: Seguridad en Aplicaciones</h2></div>
+<div class="exercise" data-difficulty="easy" data-module="6" data-points="10">
+<div class="exercise-header"><div><span class="difficulty-badge difficulty-easy">Fácil</span><span class="exercise-title">CTF-6-01: OWASP Top 10</span></div><span class="exercise-points">10 pts</span></div>
+<div class="exercise-description"><p>Nombra las 10 vulnerabilidades del OWASP Top 10 2021.</p></div>
+<div class="exercise-actions">
+<textarea class="answer-box" placeholder="Ej: Inyección..." rows="3"></textarea>
+<div class="action-buttons">
+<button class="btn btn-verify" onclick="checkAnswer(this)">✅ Verificar</button>
+<button class="btn btn-warning" onclick="toggleHint(this)">💡 Pista</button>
+<label class="complete-checkbox"><input onchange="updateProgress(this)" type="checkbox"/> Completado</label>
+</div>
+<div class="answer-feedback"></div>
+</div>
+<div class="hint-content"><h4>💡 Pista:</h4><ul><li>Consulta: <a href="https://owasp.org/www-project-top-ten/" target="_blank">OWASP Top 10</a></li></ul></div>
+</div>
+</div>
+<div class="module" id="module-7">
+<div class="module-header"><h2><span class="module-title-icon">📜</span> Módulo 7: Gobierno y Cumplimiento</h2></div>
+<div class="exercise" data-difficulty="easy" data-module="7" data-points="10">
+<div class="exercise-header"><div><span class="difficulty-badge difficulty-easy">Fácil</span><span class="exercise-title">CTF-7-01: Normativas</span></div><span class="exercise-points">10 pts</span></div>
+<div class="exercise-description"><p>Nombra 5 normativas de ciberseguridad internacionales.</p></div>
+<div class="exercise-actions">
+<textarea class="answer-box" placeholder="Ej: ISO 27001..." rows="2"></textarea>
+<div class="action-buttons">
+<button class="btn btn-verify" onclick="checkAnswer(this)">✅ Verificar</button>
+<button class="btn btn-warning" onclick="toggleHint(this)">💡 Pista</button>
+<label class="complete-checkbox"><input onchange="updateProgress(this)" type="checkbox"/> Completado</label>
+</div>
+<div class="answer-feedback"></div>
+</div>
+<div class="hint-content"><h4>💡 Pista:</h4><ul><li>Piensa en: RGPD, ISO 27001, NIS 2, PCI DSS, SOC 2...</li></ul></div>
+</div>
+</div>
+</main>
 <script src="app.js"></script>
-
 </body>
 </html>
